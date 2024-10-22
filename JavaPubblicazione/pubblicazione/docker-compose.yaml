@@ -1,0 +1,9 @@
+version: "3.0"
+
+services:
+  webapp:
+    container_name: pubblicazione
+    build: .
+    ports:
+      - "8080:8080"
+    network_mode: host

@@ -1,0 +1,78 @@
+version: '3.7' 
+services:
+
+  postgres:
+    container_name: Postgres
+    build: ./Postgres
+    image: postgresdb
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: traffico
+    networks:
+      - network
+    volumes:
+      - dbdata:/var/lib/postgresql/data  #da controllare
+    #  - C:/Users/Studente/Desktop/datidb:/schema
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+
+  pythonapi:
+    container_name: Pythonapi
+    build: ./PythonEngine
+    image: pythonapi
+    restart: always
+    volumes:
+      - C:\Users\bilal.biaz\ProgettoVIT\Git\SpringBoot\demo\src\main\java\ControlloImmagini\nuovaImmagini:/app/nuovaImmagini
+      - C:\Users\bilal.biaz\ProgettoVIT\Git\SpringBoot\demo\src\main\java\ControlloImmagini\output:/app/output
+    networks:
+      - network
+    ports:
+      - 8000:8000
+    deploy:
+      resources:
+        limits:
+          memory: 4096M
+
+  pubblicazione:
+    container_name: Pubblicazione
+    build: ./JavaPubblicazione/pubblicazione
+    image: pubblicazione
+    restart: always
+    networks:
+      - network
+    ports:
+      - "8080:8080"
+    volumes:
+      - C:/Users/bilal.biaz/ProgettoVIT/Git/SpringBoot/demo/src/main/java/ControlloImmagini/output:/output
+    #  - D:/Studenti/PIAMARTA.Michele/Git/SpringBoot/SpringBoot/SpringBoot/demo/src/main/java/com/example/demo/ControlloImmagini/immagini:/immagini
+    #  - D:/Studenti/PIAMARTA.Michele/Git/SpringBoot/SpringBoot/SpringBoot/demo/src/main/java/com/example/demo/ControlloImmagini/nuovaImmagini:/nuovaImmagini
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+  
+  engine:
+    container_name: Engine
+    build: ./Engine2
+    image: engine
+    restart: always
+    volumes:
+      - C:/Users/bilal.biaz/ProgettoVIT/Git/SpringBoot/demo/src/main/java/ControlloImmagini/nuovaImmagini:/nuovaImmagini
+      - C:/Users/bilal.biaz/ProgettoVIT/Git/SpringBoot/demo/src/main/java/ControlloImmagini/output:/output
+    networks:
+      - network
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+
+volumes:
+  dbdata:
+
+networks:
+  network:
+    driver: bridge
